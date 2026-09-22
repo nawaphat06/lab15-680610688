@@ -25,6 +25,10 @@ export default function RootLayout() {
         <main className="flex-1 p-4">
           <Outlet />
         </main>
+
+        <footer className="border-t py-4 text-center text-xs text-muted-foreground">
+          จัดทำโดย Nawapat Prompong รหัสนักศึกษา 680610688
+        </footer>
       </SidebarInset>
     </SidebarProvider>
   );
