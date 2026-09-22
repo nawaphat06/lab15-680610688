@@ -10,12 +10,11 @@ export default function HomePage() {
           <h1 className="text-xl font-semibold">
             ระบบลงทะเบียนเรียน CPE & ISNE
           </h1>
-          <Button
-            asChild
-            className="bg-black text-white hover:bg-neutral-800 dark:bg-white dark:text-black"
-          >
-            <Link to="/enrollment">ไปหน้าลงทะเบียนเรียน</Link>
-          </Button>
+          <Link to="/enrollment">
+            <Button className="bg-black text-white hover:bg-neutral-800 dark:bg-white dark:text-black">
+              ไปหน้าลงทะเบียนเรียน
+            </Button>
+          </Link>
         </CardContent>
       </Card>
 

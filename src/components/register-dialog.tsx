@@ -66,7 +66,7 @@ export function RegisterDialog({
 
   return (
     <Dialog open={open} onOpenChange={handleOpenChange}>
-      <DialogTrigger asChild>
+      <DialogTrigger>
         <Button className="gap-2">
           <UserPlus className="h-4 w-4" />
           ลงทะเบียน
@@ -88,7 +88,7 @@ export function RegisterDialog({
               <Label htmlFor="course-select">วิชา</Label>
               <Select
                 value={selectedCourseId}
-                onValueChange={setSelectedCourseId}
+                onValueChange={(val) => setSelectedCourseId(val ?? "")}
               >
                 <SelectTrigger
                   id="course-select"
