@@ -5,7 +5,6 @@ import {
   DialogContent,
   DialogHeader,
   DialogDescription,
-  DialogFooter,
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
@@ -26,7 +25,6 @@ type RegisterDialogProps = {
   onEnrollSuccess: (courseId: string, timeString: string) => void;
 };
 
-// ดึงเวลาปัจจุบันในรูปแบบ "HH:mm"
 function getCurrentTimeString() {
   const now = new Date();
   const hours = String(now.getHours()).padStart(2, "0");
@@ -42,7 +40,6 @@ export function RegisterDialog({
   const [selectedCourseId, setSelectedCourseId] = useState("");
   const [selectedTime, setSelectedTime] = useState(getCurrentTimeString);
 
-  // 1.2
   const availableCourses = useMemo(() => {
     return courses.filter(
       (course) => !enrolledCourseIds.includes(course.courseId),
@@ -52,7 +49,6 @@ export function RegisterDialog({
   function handleOpenChange(nextOpen: boolean) {
     setOpen(nextOpen);
     if (nextOpen) {
-      //
       setSelectedTime(getCurrentTimeString());
       setSelectedCourseId("");
     }
@@ -66,9 +62,10 @@ export function RegisterDialog({
     setOpen(false);
   }
 
+  const selectedCourse = courses.find((c) => c.courseId === selectedCourseId);
+
   return (
     <Dialog open={open} onOpenChange={handleOpenChange}>
-      {/* 1.1 */}
       <DialogTrigger asChild>
         <Button className="gap-2">
           <UserPlus className="h-4 w-4" />
@@ -76,8 +73,8 @@ export function RegisterDialog({
         </Button>
       </DialogTrigger>
 
-      <DialogContent className="sm:max-w-[425px]">
-        <form onSubmit={handleSubmit} className="space-y-4">
+      <DialogContent className="sm:max-w-[425px] p-0 gap-0 overflow-hidden bg-card border-border">
+        <div className="p-6 pb-5 space-y-4">
           <DialogHeader>
             <DialogTitle>ลงทะเบียนเรียน</DialogTitle>
             <DialogDescription>
@@ -85,77 +82,89 @@ export function RegisterDialog({
             </DialogDescription>
           </DialogHeader>
 
-          {/* 1 เลือกวิชา */}
-          <div className="space-y-1.5">
-            <Label htmlFor="course-select">วิชา</Label>
-            <Select
-              value={selectedCourseId}
-              onValueChange={setSelectedCourseId}
-            >
-              <SelectTrigger id="course-select" className="w-full">
-                <SelectValue placeholder="เลือกวิชา" />
-              </SelectTrigger>
-              <SelectContent side="bottom" align="start" sideOffset={4}>
-                {availableCourses.length === 0 ? (
-                  <div className="p-2 text-center text-sm text-muted-foreground">
-                    ลงทะเบียนครบทุกวิชาแล้ว
-                  </div>
-                ) : (
-                  availableCourses.map((course) => (
-                    <SelectItem key={course.courseId} value={course.courseId}>
-                      {course.courseId} - {course.courseTitle}
-                    </SelectItem>
-                  ))
-                )}
-              </SelectContent>
-            </Select>
-          </div>
+          <form id="enroll-form" onSubmit={handleSubmit} className="space-y-3">
+            {/* 1 เลือกวิชา */}
+            <div className="space-y-1.5">
+              <Label htmlFor="course-select">วิชา</Label>
+              <Select
+                value={selectedCourseId}
+                onValueChange={setSelectedCourseId}
+              >
+                <SelectTrigger
+                  id="course-select"
+                  className="w-full bg-background border-input"
+                >
+                  <SelectValue placeholder="เลือกวิชา">
+                    {selectedCourse ? (
+                      <span className="block max-w-[340px] truncate text-left">
+                        {selectedCourse.courseId} - {selectedCourse.courseTitle}
+                      </span>
+                    ) : undefined}
+                  </SelectValue>
+                </SelectTrigger>
+                <SelectContent side="bottom" align="start" sideOffset={4}>
+                  {availableCourses.length === 0 ? (
+                    <div className="p-2 text-center text-sm text-muted-foreground">
+                      ลงทะเบียนครบทุกวิชาแล้ว
+                    </div>
+                  ) : (
+                    availableCourses.map((course) => (
+                      <SelectItem key={course.courseId} value={course.courseId}>
+                        {course.courseId} - {course.courseTitle}
+                      </SelectItem>
+                    ))
+                  )}
+                </SelectContent>
+              </Select>
+            </div>
 
-          {/* 2 เลือกเวลา */}
-          <div className="space-y-1.5">
-            <Label htmlFor="time-input">เลือกเวลา</Label>
-            <Input
-              id="time-input"
-              type="time"
-              value={selectedTime}
-              onChange={(e) => setSelectedTime(e.target.value)}
-              required
-            />
-          </div>
+            {/* 2 เลือกเวลา */}
+            <div className="space-y-1.5">
+              <Label htmlFor="time-input">เวลา</Label>
+              <Input
+                id="time-input"
+                type="time"
+                value={selectedTime}
+                onChange={(e) => setSelectedTime(e.target.value)}
+                required
+                className="bg-background border-input"
+              />
+            </div>
 
-          {/* 3 ชื่อ นศ. readOnl */}
-          <div className="space-y-1.5">
-            <Label htmlFor="student-name">ชื่อ นศ.</Label>
-            <Input
-              id="student-name"
-              value={`${currentStudent.firstName} ${currentStudent.lastName}`}
-              readOnly
-              className="bg-muted cursor-not-allowed"
-            />
-          </div>
+            {/* 3 ชื่อ นศ. readOnly */}
+            <div className="space-y-1.5">
+              <Label htmlFor="student-name">ชื่อ นศ.</Label>
+              <Input
+                id="student-name"
+                value={`${currentStudent.firstName} ${currentStudent.lastName}`}
+                readOnly
+                className="bg-background/60 border-input cursor-not-allowed text-muted-foreground"
+              />
+            </div>
 
-          {/* 4 โปรแกรม */}
-          <div className="space-y-1.5">
-            <Label htmlFor="student-program">โปรแกรม</Label>
-            <Input
-              id="student-program"
-              value={currentStudent.program}
-              readOnly
-              className="bg-muted cursor-not-allowed"
-            />
-          </div>
+            {/* 4 โปรแกรม */}
+            <div className="space-y-1.5">
+              <Label htmlFor="student-program">โปรแกรม</Label>
+              <Input
+                id="student-program"
+                value={currentStudent.program}
+                readOnly
+                className="bg-background/60 border-input cursor-not-allowed text-muted-foreground"
+              />
+            </div>
+          </form>
+        </div>
 
-          {/* 5 ปุ่มยืนยันการลงทะเบียน (disabled จนกว่าจะเลือกวิชา) */}
-          <div className="pt-2">
-            <Button
-              type="submit"
-              className="w-full"
-              disabled={!selectedCourseId}
-            >
-              ยืนยันการลงทะเบียน
-            </Button>
-          </div>
-        </form>
+        <div className="border-t border-border bg-muted/40 dark:bg-[rgb(36,36,36)] px-6 py-4 flex justify-end">
+          <Button
+            type="submit"
+            form="enroll-form"
+            disabled={!selectedCourseId}
+            className="bg-neutral-600 hover:bg-neutral-700 text-white dark:bg-neutral-200 dark:text-neutral-900 dark:hover:bg-neutral-300 disabled:opacity-50"
+          >
+            ยืนยันการลงทะเบียน
+          </Button>
+        </div>
       </DialogContent>
     </Dialog>
   );

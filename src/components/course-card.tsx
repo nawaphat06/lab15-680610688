@@ -55,14 +55,14 @@ export function CourseCard({
           {isEnrolled ? (
             <Badge
               variant="secondary"
-              className="bg-amber-100 text-amber-800 dark:bg-purple-950 dark:text-purple-300 border-none"
+              className="border-none bg-amber-100 text-amber-900 dark:bg-purple-900/40 dark:text-purple-300"
             >
               ลงทะเบียนแล้ว
             </Badge>
           ) : (
             <Badge
               variant="secondary"
-              className="bg-purple-100 text-purple-800 dark:bg-amber-950 dark:text-amber-300 border-none"
+              className="border-none bg-purple-100 text-purple-900 dark:bg-amber-900/40 dark:text-amber-300"
             >
               เปิดรับ
             </Badge>

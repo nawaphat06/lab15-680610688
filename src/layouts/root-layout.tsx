@@ -8,6 +8,7 @@ import {
   SidebarProvider,
   SidebarTrigger,
 } from "@/components/ui/sidebar";
+import { currentStudent } from "@/lib/mock-data";
 
 export default function RootLayout() {
   return (
@@ -26,8 +27,9 @@ export default function RootLayout() {
           <Outlet />
         </main>
 
-        <footer className="border-t py-4 text-center text-xs text-muted-foreground">
-          จัดทำโดย Nawapat Prompong รหัสนักศึกษา 680610688
+        <footer className="border-t border-black py-4 text-center text-xs text-muted-foreground dark:border-white/20">
+          จัดทำโดย {currentStudent.firstName} {currentStudent.lastName}{" "}
+          รหัสนักศึกษา {currentStudent.studentId}{" "}
         </footer>
       </SidebarInset>
     </SidebarProvider>
